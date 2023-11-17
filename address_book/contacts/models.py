@@ -81,3 +81,5 @@ class ContactActivityLog(models.Model):
 
     def __str__(self):
         return f"{self.contact} was {self.activity_type}: {self.timestamp}"
+
+
