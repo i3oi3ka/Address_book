@@ -2,6 +2,13 @@ from django.utils import timezone
 from rest_framework import serializers
 
 from .models import Contact, ContactGroup, Events
+from django.contrib.auth.models import User
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'first_name', 'last_name')
 
 
 # class Post:
@@ -58,21 +65,30 @@ class ContactEventSerializer(serializers.ModelSerializer):
 
 
 class ContactGroupSerializer(serializers.ModelSerializer):
-    contacts = ContactSerializer(many=True)
+    contact_list = serializers.SerializerMethodField()
+
+    # contacts = ContactSerializer(many=True)
+    # contacts = serializers.SlugRelatedField(
+    #     many=True,
+    #     read_only=True,
+    #     slug_field='first_name'
+    # )
+    contacts = serializers.StringRelatedField(many=True)  ## __str__
+
+    def get_contact_list(self, group):
+        return ContactEventSerializer(group.contacts.all(), many=True).data
 
     class Meta:
         model = ContactGroup
-        fields = '__all__'
+        fields = "__all__"
 
 
 class EventSerializer(serializers.ModelSerializer):
-    contacts = ContactEventSerializer(many=True)
+    contact_list = serializers.SerializerMethodField()
+
+    def get_contact_list(self, event):
+        return ContactEventSerializer(event.contacts.all(), many=True).data
 
     class Meta:
         model = Events
-        fields = '__all__'
-
-    def validate_date_time(self, value):
-        current_time = timezone.now()
-        if value < current_time:
-            raise serializers.ValidationError("Дата події не може бути менше поточної дати та часу.")
+        fields = "__all__"

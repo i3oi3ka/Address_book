@@ -1,9 +1,12 @@
 import django_filters
-from rest_framework import permissions
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import ModelViewSet
 from django_filters import rest_framework as filters
 from .models import Contact, ContactGroup, Events
-from .serializers import ContactSerializer, ContactGroupSerializer, EventSerializer
+from .serializers import ContactSerializer, ContactGroupSerializer, EventSerializer, UserSerializer
+from django.contrib.auth.models import User
+from rest_framework import status
+from rest_framework.response import Response
 
 
 # class IsOver18(BasePermission):
@@ -45,14 +48,22 @@ class EventViewSet(ModelViewSet):
 class ContactViewSet(ModelViewSet):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
-    # filter_backends = [filters.SearchFilter]
-    filter_backends = (filters.DjangoFilterBackend,)
-    filterset_class = ContactFilter
-    search_fields = ['first_name', 'last_name', 'city', 'country', 'street']
-    # permission_classes = [IsAuthenticated]
-    permission_classes = [permissions.AllowAny]
 
-#
+    # filter_backends = [filters.SearchFilter]
+    # filter_backends = (filters.DjangoFilterBackend,)
+    # filterset_class = ContactFilter
+    # search_fields = ['first_name', 'last_name', 'city', 'country', 'street']
+    # permission_classes = [IsAuthenticatedOrReadOnly]
+    # permission_classes = [permissions.AllowAny]
+# def get_permissions(self):
+#     """
+#     Instantiates and returns the list of permissions that this view requires.
+#     """
+#     if self.action == 'list':
+#         permission_classes = [IsAuthenticated]
+#     else:
+#         permission_classes = [IsAdminUser]
+#     return [permission() for permission in permission_classes]
 # class ContactList(ListAPIView):
 #     queryset = Contact.objects.all()
 #     serializer_class = ContactSerializer
