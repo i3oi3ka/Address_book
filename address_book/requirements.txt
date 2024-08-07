@@ -8,7 +8,7 @@ exceptiongroup==1.1.3
 iniconfig==2.0.0
 mocker==1.1.1
 packaging==23.2
-Pillow==10.0.1
+Pillow==10.2.0
 pluggy==1.3.0
 psycopg2-binary==2.9.9
 PyJWT==2.8.0
